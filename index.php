@@ -17,7 +17,7 @@ $ressource =  $uri[3];
 
 $keywords = isset($_GET['s']) ? $_GET['s'] : null;
 
-$page = isset($_GET['p']) ? $_GET['p'] : null;
+$page = isset($_GET['page']) ? $_GET['page'] : null;
 
 $userId = null;
 if(isset($uri[4])){

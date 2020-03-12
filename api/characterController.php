@@ -1,6 +1,7 @@
 <?php
 include_once './domain/character.php';
 include_once './service/characterService.php';
+include_once './shared/pagination.php';
 
 
 class CharacterController{
@@ -36,7 +37,7 @@ class CharacterController{
                     $res = $this->get_character($this->userId);
                 } 
                 else{
-                    $res = $this->get_characters($this->keyWords);
+                    $res = $this->get_characters($this->keyWords, $this->page);
                 } 
 
                 break;
@@ -75,15 +76,30 @@ class CharacterController{
      *      description="keywords",
      *      required=false
      *  ),
+     *  @OA\Parameter(
+     *      name="page",
+     *      in="query",
+     *      description="number of requested page",
+     *      required=false
+     *  ),
      *  @OA\Response(response="200", description="There are many caracters"),
      *  @OA\Response(response="204", description="No character found")
      * )
      */ 
-    private function get_characters($keyWords){
-
+    private function get_characters($keyWords, $page){
 
         if($keyWords){
             $stmt = $this->characterService->search($keyWords);
+        }else if($page){
+            $rows_per_page = 2;
+            $first_row = ($rows_per_page * $page)-$rows_per_page;
+            $rows_count = $this->characterService->count();
+            $pages = ceil($rows_count/$rows_per_page);
+            $url = $_SERVER['SERVER_NAME'].'/api_project/api/characters';
+
+            $stmt = $this->characterService->findAllWithPaging($first_row,$rows_per_page);
+
+            $characters_arr['paging'] = Pagination::getPaging($page,$rows_count,$rows_per_page,$url);
         }else{
             $stmt = $this->characterService->findAll();
         }

@@ -77,13 +77,31 @@ class CharacterDao{
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
-        $row = $stmt->fatch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row['total_rows'];
     }
 
-    function create($character){
+    function create(Character $character){
 
+        $query = 'INSERT INTO '.$this->table_name.'('
+        .$this->column_first_name.','
+        .$this->column_last_name.','
+        .$this->column_hero_name.','
+        .$this->column_age.','
+        .$this->column_created.','
+        .$this->column_modified.')'
+        .'VALUES ('
+        .$character->first_name.','
+        .$character->last_name.','
+        .$character->hero_name.','
+        .$character->age.','
+        .$character->created.','
+        .$character->modified.');';
+
+        $stmt = $this->connection->prepare($query);
+        
+        $stmt->execute();
     }
 
     function update($character){

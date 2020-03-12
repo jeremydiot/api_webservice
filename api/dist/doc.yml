@@ -12,6 +12,11 @@ paths:
           in: query
           description: keywords
           required: false
+        -
+          name: page
+          in: query
+          description: 'number of requested page'
+          required: false
       responses:
         '200':
           description: 'There are many caracters'
