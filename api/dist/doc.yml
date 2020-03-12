@@ -22,6 +22,38 @@ paths:
           description: 'There are many caracters'
         '204':
           description: 'No character found'
+    post:
+      tags:
+        - characters
+      summary: 'Create new character'
+      operationId: setOneCharacter
+      requestBody:
+        description: 'Input data format for character'
+        content:
+          application/json:
+            schema:
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                hero_name:
+                  type: string
+                age:
+                  type: string
+              type: object
+              example:
+                first_name: Bruce
+                last_name: Banner
+                hero_name: Hulk
+                age: '38'
+      responses:
+        '201':
+          description: 'character was created'
+        '503':
+          description: 'SQL error'
+        '400':
+          description: 'wrong character format'
   '/api_project/api/characters/{characterId}':
     get:
       tags:

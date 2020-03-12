@@ -84,28 +84,52 @@ class CharacterDao{
 
     function create(Character $character){
 
-        $query = 'INSERT INTO '.$this->table_name.'('
-        .$this->column_first_name.','
-        .$this->column_last_name.','
-        .$this->column_hero_name.','
-        .$this->column_age.','
-        .$this->column_created.','
+        $query = 'INSERT INTO '.$this->table_name.' ('
+        .$this->column_first_name.', '
+        .$this->column_last_name.', '
+        .$this->column_hero_name.', '
+        .$this->column_age.', '
+        .$this->column_created.', '
         .$this->column_modified.')'
-        .'VALUES ('
-        .$character->first_name.','
-        .$character->last_name.','
-        .$character->hero_name.','
-        .$character->age.','
-        .$character->created.','
-        .$character->modified.');';
+        .' VALUES (? ,? ,? ,? ,? ,?);';
 
         $stmt = $this->connection->prepare($query);
-        
-        $stmt->execute();
+
+        $stmt->bindParam(1, $character->first_name);
+        $stmt->bindParam(2, $character->last_name);
+        $stmt->bindParam(3, $character->hero_name);
+        $stmt->bindParam(4, $character->age);
+        $stmt->bindParam(5, $character->created);
+        $stmt->bindParam(6, $character->modified);
+
+        return $stmt->execute();
     }
 
-    function update($character){
+    function update(Character $character){
 
+        if(!$character->character_id) return false;
+        
+
+        $query ='UPDATE '.$this->table_name.' SET ';
+
+        if($character->first_name) $query = $query.$this->column_first_name.' = '.$character->first_name.', ';
+        if($character->last_name) $query = $query.$this->column_last_name.' = '.$character->last_name.', ';
+        if($character->hero_name) $query = $query.$this->column_hero_name.' = '.$character->hero_name.', ';
+        if($character->age) $query = $query.$this->column_age.' = '.$character->age.', ';
+        if($character->modified) $query = $query.$this->column_modified.' = '.$character->modified.', ';
+
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+        //     .' SET '.$this->column_first_name.' = ?,'
+            
+            
+            
+            ;
     }
 
     function delete($id){

@@ -43,7 +43,16 @@ class CharacterController{
                 break;
 
             case 'POST':
-                # code...
+                $body = json_decode(file_get_contents('php://input'));
+
+                $character = new Character();
+                $character->first_name = $body->first_name;
+                $character->last_name = $body->last_name;
+                $character->hero_name = $body->hero_name;
+                $character->age = $body->age;
+                
+                $res = $this->set_character($character);
+
                 break;
 
             case 'PUT':
@@ -174,5 +183,69 @@ class CharacterController{
         }
 
         return $response;
+    }
+
+    
+    /**
+     * @OA\Post(
+     * path="/api_project/api/characters",
+     * tags={"characters"},
+     * summary="Create new character",
+     * operationId="setOneCharacter",
+     * @OA\RequestBody(
+     *      description="Input data format for character",
+     *      @OA\MediaType(mediaType="application/json",
+     *          @OA\Schema(
+     *              @OA\Property(
+     *                  property="first_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="last_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="hero_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="age",
+     *                  type="string"
+     *              ),
+     *              example={"first_name":"Bruce", "last_name":"Banner", "hero_name":"Hulk", "age":"38"}
+     *          )
+     *      )
+     * ),
+     * @OA\Response(response="201", description="character was created"),
+     * @OA\Response(response="503", description="SQL error"),
+     * @OA\Response(response="400", description="wrong character format")
+     * )
+     */
+    private function set_character(Character $character){
+        if( $character->first_name && 
+            $character->last_name && 
+            $character->hero_name && 
+            $character->age){
+
+                $res = $this->characterService->create($character);
+
+                if($res){
+                    http_response_code(201);
+                    $response['body'] = json_encode(array('message'=>'success !'));
+
+                }else{
+                    http_response_code(503);
+                    $response['body'] = json_encode(array('message'=>'SQL error'));
+
+                }
+
+            }else{
+                http_response_code(400);
+                $response['body'] = json_encode(array('message'=>'wrong character format'));
+            }
+
+
+        return $response;
+        
     }
 }
