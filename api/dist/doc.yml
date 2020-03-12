@@ -1,0 +1,39 @@
+openapi: 3.0.0
+paths:
+  /api_project/api/characters:
+    get:
+      tags:
+        - characters
+      summary: 'Get all characters'
+      operationId: getAllCharacters
+      parameters:
+        -
+          name: s
+          in: query
+          description: keywords
+          required: false
+      responses:
+        '200':
+          description: 'There are many caracters'
+        '204':
+          description: 'No character found'
+  '/api_project/api/characters/{characterId}':
+    get:
+      tags:
+        - characters
+      summary: 'Get character by Id'
+      operationId: getOneCharacters
+      parameters:
+        -
+          name: characterId
+          in: path
+          description: 'ID of character to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'There is one caracter'
+        '204':
+          description: 'No character found'

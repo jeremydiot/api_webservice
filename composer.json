@@ -1,0 +1,12 @@
+{
+    "name": "jdiot/api_project",
+    "authors": [
+        {
+            "name": "jeremydiot",
+            "email": "diot.jeremy@gmail.com"
+        }
+    ],
+    "require": {
+        "zircote/swagger-php": "^3.0"
+    }
+}
