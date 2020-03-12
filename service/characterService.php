@@ -53,10 +53,10 @@ class CharacterService{
         return $this->characterDao->create($character);
     }
 
-    function update($character){
+    function update($userId, Character $character){
         $character->modified = date('Y-m-d H:i:s');
 
-        return $this->characterDao->update($character);
+        return $this->characterDao->update($userId, $character);
     }
 
     function delete($id){

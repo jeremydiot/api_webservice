@@ -56,11 +56,19 @@ class CharacterController{
                 break;
 
             case 'PUT':
-                # code...
+                $body = json_decode(file_get_contents('php://input'));
+
+                $character = new Character();
+                $character->first_name = $body->first_name;
+                $character->last_name = $body->last_name;
+                $character->hero_name = $body->hero_name;
+                $character->age = $body->age;
+                
+                $res = $this->update_character($this->userId,$character);
                 break;
 
             case 'DELETE':
-                # code...
+                $res = $this->delete_character($this->userId);
                 break;
 
             default:
@@ -71,6 +79,118 @@ class CharacterController{
         if($res['body']){
             echo $res['body'];
         }
+    }
+
+    /**
+     * @OA\Delete(
+     *  path="/api_project/api/characters/{characterId}",
+     *  tags={"characters"},
+     *  summary="Get all characters",
+     *  operationId="getAllCharacters",
+     * @OA\Parameter(
+     *  name="characterId",
+     *  in="path",
+     *  description="ID of character",
+     *  required=true,
+     *  @OA\Schema(
+     *      type="integer",
+     *      format="int64"
+     *      )
+     *  ),
+     *  @OA\Response(response="200", description="character was deleted"),
+     *  @OA\Response(response="503", description="SQL error"),
+     *  @OA\Response(response="400", description="wrong data idenfier")
+     * )
+     */ 
+    function delete_character($userId){
+        if($userId){
+
+            $res = $this->characterService->delete($userId);
+
+            if($res){
+                http_response_code(200);
+                $response['body'] = json_encode(array('message'=>'success !'));
+
+            }else{
+                http_response_code(503);
+                $response['body'] = json_encode(array('message'=>'SQL error'));
+            }
+
+        }else{
+            http_response_code(400);
+            $response['body'] = json_encode(array('message'=>'missing identification data'));
+        }
+
+        return $response;
+    }
+
+    /**
+     * @OA\Put(
+     *  path="/api_project/api/characters/{characterId}",
+     *  tags={"characters"},
+     *  summary="Get all characters",
+     *  operationId="getAllCharacters",
+     * @OA\Parameter(
+     *  name="characterId",
+     *  in="path",
+     *  description="ID of character",
+     *  required=true,
+     *  @OA\Schema(
+     *      type="integer",
+     *      format="int64"
+     *      )
+     *  ),
+     * @OA\RequestBody(
+     *      description="Input data format for character",
+     *      @OA\MediaType(mediaType="application/json",
+     *          @OA\Schema(
+     *              @OA\Property(
+     *                  property="first_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="last_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="hero_name",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="age",
+     *                  type="string"
+     *              ),
+     *              example={"first_name":"Bruce", "last_name":"Banner", "hero_name":"Hulk", "age":"38"}
+     *          )
+     *      )
+     * ),
+     *  @OA\Response(response="200", description="character was updated"),
+     *  @OA\Response(response="503", description="SQL error"),
+     *  @OA\Response(response="400", description="wrong data identifier")
+     * )
+     */ 
+    function update_character($userId,$character){
+
+
+        if($userId){
+
+            $res = $this->characterService->update($userId,$character);
+
+            if($res){
+                http_response_code(200);
+                $response['body'] = json_encode(array('message'=>'success !'));
+
+            }else{
+                http_response_code(503);
+                $response['body'] = json_encode(array('message'=>'SQL error'));
+            }
+
+
+        }else{
+            http_response_code(400);
+            $response['body'] = json_encode(array('message'=>'missing identification data'));
+        }
+        return $response;
     }
 
     /**
@@ -185,7 +305,7 @@ class CharacterController{
         return $response;
     }
 
-    
+
     /**
      * @OA\Post(
      * path="/api_project/api/characters",

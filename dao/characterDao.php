@@ -105,35 +105,36 @@ class CharacterDao{
         return $stmt->execute();
     }
 
-    function update(Character $character){
+    function update($userId, Character $character){
 
-        if(!$character->character_id) return false;
+        if(!$userId) return false;
         
-
         $query ='UPDATE '.$this->table_name.' SET ';
 
-        if($character->first_name) $query = $query.$this->column_first_name.' = '.$character->first_name.', ';
-        if($character->last_name) $query = $query.$this->column_last_name.' = '.$character->last_name.', ';
-        if($character->hero_name) $query = $query.$this->column_hero_name.' = '.$character->hero_name.', ';
-        if($character->age) $query = $query.$this->column_age.' = '.$character->age.', ';
-        if($character->modified) $query = $query.$this->column_modified.' = '.$character->modified.', ';
+        $arr_modif = array();
 
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-        //     .' SET '.$this->column_first_name.' = ?,'
-            
-            
-            
-            ;
+        if($character->first_name) array_push($arr_modif, $this->column_first_name.' = "'.$character->first_name.'"') ;
+        if($character->last_name) array_push($arr_modif, $this->column_last_name.' = "'.$character->last_name.'"');
+        if($character->hero_name) array_push($arr_modif, $this->column_hero_name.' = "'.$character->hero_name.'"');
+        if($character->age) array_push($arr_modif, $this->column_age.' = "'.$character->age.'"');
+        if($character->modified) array_push($arr_modif, $this->column_modified.' = "'.$character->modified.'"');
+
+        $query = $query.implode(',',$arr_modif);
+
+        $query = $query.' WHERE '.$this->column_character_id.' = '.$userId.';';
+
+        $stmt = $this->connection->prepare($query);
+
+        return $stmt->execute();
+
     }
 
     function delete($id){
+        $query = 'DELETE FROM '.$this->table_name.' WHERE '.$this->column_character_id.' = '.$id.';';
 
+        $stmt = $this->connection->prepare($query);
+
+        return $stmt->execute();
     }
 
 }
