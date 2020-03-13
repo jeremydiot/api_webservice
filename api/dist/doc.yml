@@ -23,8 +23,8 @@ paths:
     put:
       tags:
         - characters
-      summary: 'Get all characters'
-      operationId: getAllCharacters
+      summary: 'update one characters'
+      operationId: updateOneCharacter
       parameters:
         -
           name: characterId
@@ -64,8 +64,8 @@ paths:
     delete:
       tags:
         - characters
-      summary: 'Get all characters'
-      operationId: getAllCharacters
+      summary: 'delete onde character'
+      operationId: deleteOneCharacter
       parameters:
         -
           name: characterId

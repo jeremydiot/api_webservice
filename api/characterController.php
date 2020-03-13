@@ -85,8 +85,8 @@ class CharacterController{
      * @OA\Delete(
      *  path="/api_project/api/characters/{characterId}",
      *  tags={"characters"},
-     *  summary="Get all characters",
-     *  operationId="getAllCharacters",
+     *  summary="delete onde character",
+     *  operationId="deleteOneCharacter",
      * @OA\Parameter(
      *  name="characterId",
      *  in="path",
@@ -128,8 +128,8 @@ class CharacterController{
      * @OA\Put(
      *  path="/api_project/api/characters/{characterId}",
      *  tags={"characters"},
-     *  summary="Get all characters",
-     *  operationId="getAllCharacters",
+     *  summary="update one characters",
+     *  operationId="updateOneCharacter",
      * @OA\Parameter(
      *  name="characterId",
      *  in="path",
